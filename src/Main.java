@@ -11,7 +11,6 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String input = Files.readString(INPUT_PATH);
         String expected = normalize(Files.readString(OUTPUT_PATH));
-
         String actual = runSolution(input);
 
         System.out.println("입력값");
@@ -23,39 +22,20 @@ public class Main {
         System.out.println("\n" + (expected.equals(actual) ? "✅ 정답입니다." : "❌ 오답입니다."));
     }
 
-    /**
-     * 문제를 세팅할 때 입력을 solution의 파라미터로 바꾸고,
-     * 반환값을 문자열로 바꾸는 부분입니다.
-     */
+    /** 문제 입력을 원본 값과 순서 그대로 solution의 파라미터로 변환합니다. */
     private static String runSolution(String input) {
         try (Scanner scanner = new Scanner(input)) {
-            StringBuilder results = new StringBuilder();
+            int planetCount = scanner.nextInt();
+            int[][] planets = new int[planetCount][3];
 
-            while (scanner.hasNextInt()) {
-                int houseCount = scanner.nextInt();
-                int roadCount = scanner.nextInt();
-
-                if (houseCount == 0 && roadCount == 0) {
-                    break;
-                }
-
-                int[][] roads = new int[roadCount][3];
-                for (int i = 0; i < roadCount; i++) {
-                    roads[i][0] = scanner.nextInt();
-                    roads[i][1] = scanner.nextInt();
-                    roads[i][2] = scanner.nextInt();
-                }
-
-                Solution solution = new Solution();
-                long result = solution.solution(houseCount, roads);
-
-                if (!results.isEmpty()) {
-                    results.append('\n');
-                }
-                results.append(result);
+            for (int i = 0; i < planetCount; i++) {
+                planets[i][0] = scanner.nextInt();
+                planets[i][1] = scanner.nextInt();
+                planets[i][2] = scanner.nextInt();
             }
 
-            return results.toString();
+            Solution solution = new Solution();
+            return String.valueOf(solution.solution(planets));
         }
     }
 
@@ -65,15 +45,11 @@ public class Main {
 
     private static Path findFile(String fileName) {
         Path current = Paths.get("").toAbsolutePath();
-
         while (current != null) {
             Path candidate = current.resolve(fileName);
-            if (Files.exists(candidate)) {
-                return candidate;
-            }
+            if (Files.exists(candidate)) return candidate;
             current = current.getParent();
         }
-
         throw new IllegalStateException(fileName + " 파일을 찾을 수 없습니다.");
     }
 }

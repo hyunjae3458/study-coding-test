@@ -163,7 +163,8 @@ problem-records/softeer/1234-문제명.md
 - 문제 정보와 원문 링크
 - 문제 난이도, 난이도 제공처, 확인 날짜
 - 문제 요약 및 입출력 설명
-- 최종 제출 코드 전체
+- 공식 예제의 기본 입력과 출력
+- 최종 `Solution.java` 코드 전체
 - 사용자의 처음 접근
 - 처음 틀렸던 원인과 실제 오답 코드 또는 핵심 부분
 - 수정 과정
@@ -178,6 +179,11 @@ problem-records/softeer/1234-문제명.md
 
 기록 작성 시 `problem-records/TEMPLATE.md`의 형식을 따른다. 문제 기록을 만든 뒤
 `problem-records/README.md`의 문제 목록도 함께 갱신한다.
+
+문제 기록의 최종 코드에는 플랫폼 제출용 `Main` 전체를 넣지 않는다. 사용자가 연습하며
+작성한 최종 `Solution.java`만 원형을 유지해 기록한다. 플랫폼 제출용 코드는
+`submissions/` 아래에 별도 파일로 관리한다. 입출력 설명과 함께 현재 문제의 공식 예제
+`input.txt`, `output.txt` 내용도 각각 코드 블록으로 기록한다.
 
 백준 난이도는 solved.ac의 현재 티어를 사용하고 `골드 IV`처럼 한글로 표기한다.
 개별 기록에는 `(solved.ac, YYYY-MM-DD 확인)`을 함께 적고, 전체 문제 목록에는 티어만
