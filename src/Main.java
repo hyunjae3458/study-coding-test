@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -10,37 +12,70 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         String input = Files.readString(INPUT_PATH);
-        String expected = normalize(Files.readString(OUTPUT_PATH));
-        String actual = runSolution(input);
+        List<String> expectedResults = readExpectedResults(Files.readString(OUTPUT_PATH));
+        List<TestResult> results = runSolutions(input, expectedResults);
 
-        System.out.println("입력값");
-        System.out.println(input.stripTrailing());
-        System.out.println("\n기댓값");
-        System.out.println(expected);
-        System.out.println("\n실행 결과");
-        System.out.println(actual);
-        System.out.println("\n" + (expected.equals(actual) ? "✅ 정답입니다." : "❌ 오답입니다."));
+        int passed = 0;
+        for (int i = 0; i < results.size(); i++) {
+            TestResult result = results.get(i);
+            boolean success = result.expected.equals(result.actual);
+            if (success) passed++;
+
+            System.out.println("테스트 케이스 " + (i + 1));
+            System.out.println("- 입력값:\n" + result.input);
+            System.out.println("- 기댓값: " + result.expected);
+            System.out.println("- 실제값: " + result.actual);
+            System.out.println("- 결과: " + (success ? "통과 ✅" : "실패 ❌"));
+            if (i + 1 < results.size()) System.out.println();
+        }
+
+        System.out.println("\n총 " + passed + "/" + results.size() + "개 통과");
     }
 
     /** 문제 입력을 원본 값과 순서 그대로 solution의 파라미터로 변환합니다. */
-    private static String runSolution(String input) {
-        try (Scanner scanner = new Scanner(input)) {
-            int planetCount = scanner.nextInt();
-            int[][] planets = new int[planetCount][3];
+    private static List<TestResult> runSolutions(String input, List<String> expectedResults) {
+        List<TestResult> results = new ArrayList<>();
 
-            for (int i = 0; i < planetCount; i++) {
-                planets[i][0] = scanner.nextInt();
-                planets[i][1] = scanner.nextInt();
-                planets[i][2] = scanner.nextInt();
+        try (Scanner scanner = new Scanner(input)) {
+            int caseIndex = 0;
+            while (scanner.hasNextInt()) {
+                int n = scanner.nextInt();
+                int m = scanner.nextInt();
+                int[][] map = new int[n][m];
+                StringBuilder caseInput = new StringBuilder().append(n).append(' ').append(m).append('\n');
+
+                for (int row = 0; row < n; row++) {
+                    for (int col = 0; col < m; col++) {
+                        map[row][col] = scanner.nextInt();
+                        if (col > 0) caseInput.append(' ');
+                        caseInput.append(map[row][col]);
+                    }
+                    if (row + 1 < n) caseInput.append('\n');
+                }
+
+                if (caseIndex >= expectedResults.size()) {
+                    throw new IllegalStateException("output.txt의 예제 출력이 부족합니다.");
+                }
+
+                Solution solution = new Solution();
+                String actual = String.valueOf(solution.solution(n, m, map));
+                results.add(new TestResult(caseInput.toString(), expectedResults.get(caseIndex), actual));
+                caseIndex++;
             }
 
-            Solution solution = new Solution();
-            return String.valueOf(solution.solution(planets));
+            if (caseIndex != expectedResults.size()) {
+                throw new IllegalStateException("input.txt와 output.txt의 예제 개수가 다릅니다.");
+            }
         }
+        return results;
     }
 
-    private static String normalize(String value) {
-        return value.replace("\r\n", "\n").stripTrailing();
+    private static List<String> readExpectedResults(String output) {
+        List<String> results = new ArrayList<>();
+        try (Scanner scanner = new Scanner(output)) {
+            while (scanner.hasNext()) results.add(scanner.next());
+        }
+        return results;
     }
 
     private static Path findFile(String fileName) {
@@ -51,5 +86,17 @@ public class Main {
             current = current.getParent();
         }
         throw new IllegalStateException(fileName + " 파일을 찾을 수 없습니다.");
+    }
+
+    private static class TestResult {
+        private final String input;
+        private final String expected;
+        private final String actual;
+
+        private TestResult(String input, String expected, String actual) {
+            this.input = input;
+            this.expected = expected;
+            this.actual = actual;
+        }
     }
 }
