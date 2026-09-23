@@ -1,163 +1,148 @@
 import java.util.*;
 public class Solution {
     /**
-     * @param n 세로 크기 (입력값 그대로)
-     * @param m 가로 크기 (입력값 그대로)
-     * @param map 0은 바다, 1은 땅인 N x M 지도 (입력 순서와 값 그대로)
-     * @return 모든 섬을 연결하는 다리 길이의 최솟값, 연결할 수 없으면 -1
+     * @param r 방의 행 수 R (입력값 그대로)
+     * @param c 방의 열 수 C (입력값 그대로)
+     * @param t 경과 시간 T (입력값 그대로)
+     * @param room R×C 방의 상태, 입력 행·열 순서 그대로.
+     *             -1은 공기청정기, 0 이상은 미세먼지 양.
+     *             배열 인덱스는 0-based이며 room[0][0]은 문제의 1행 1열.
+     * @return T초 후 방에 남은 미세먼지의 총량
      */
-    class Bridge{
-        int start;
-        int end;
-        int cost;
-
-        public Bridge(int start, int end, int cost){
-            this.start = start;
-            this.end = end;
-            this.cost = cost;
-        }
-    }
-
-    int[] parents;
-    int[] size;
-    List<Bridge> bridges = new ArrayList<>();
     int[] dxs = {1,0,-1,0};
     int[] dys = {0,1,0,-1};
-    Queue<int[]> q = new LinkedList<>();
-    int N;
-    int M;
-    public int solution(int n, int m, int[][] map) {
-        N = n;
-        M = m;
-        // 그룹화
-        // 그룹 id는 2부터시작(1이 땅이기 때문)
-        int groupId = 2;
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < m; j++){
-                if(map[i][j] == 1){
-                    makeGroup(map, i, j, groupId);
-                    groupId += 1;
-                }
+    int R;
+    int C;
+    int airX1;
+    int airX2;
+    public int solution(int r, int c, int t, int[][] room) {
+        R = r;
+        C = c;
+        Queue<int[]> q = new LinkedList<>();
+        // 공기 청정기 위치 구하기
+        for(int i = 0; i < R; i++) {
+            if(room[i][0] == -1){
+                airX1 = i;
+                break;
             }
         }
+        airX2 = airX1 + 1;
 
-        // 다리 기록
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < m; j++){
-                // 섬이라면
-                if(map[i][j] != 0 && map[i][j] != 1){
-                    // 섬의 한 지점에서 상하좌우를 봤을때 바다라면
-                    for(int dir = 0; dir < 4; dir++){
-                        int nextX = i + dxs[dir];
-                        int nextY = j + dys[dir];
-                        if(inRange(nextX, nextY) && map[nextX][nextY] == 0){
-                            getBridge(map, nextX, nextY, dir, map[i][j]);
-                        }
+
+
+        while(t>0){
+            // 확산 시작될 미세먼지 위치 기록
+            for(int i = 0; i < R; i++){
+                for(int j = 0; j < C; j++){
+                    if(room[i][j] > 0){
+                        q.add(new int[]{i,j});
                     }
                 }
             }
+
+            int[][] dp = new int[R][C];
+            // 확산
+            while(!q.isEmpty()){
+                int[] curr = q.poll();
+                int x = curr[0];
+                int y = curr[1];
+                // 확산된 영역의 개수
+                int count = 0;
+                int amount = room[x][y] / 5;
+                for(int i = 0; i < 4; i++){
+                    int nx = x + dxs[i];
+                    int ny = y + dys[i];
+                    if(inRange(nx,ny) && room[nx][ny] != -1){
+                        count += 1;
+                        dp[nx][ny] += amount;
+                    }
+                }
+                // 확산된 만큼 그 자리는 감소
+                room[x][y] -= count * amount;
+            }
+
+            // 현재 상태에서 확산된 미세먼지 값을 갱신
+            for(int i = 0; i < R; i++){
+                for(int j = 0; j < C; j++){
+                    if(dp[i][j] > 0){
+                        room[i][j] += dp[i][j];
+                    }
+                }
+            }
+
+            // 공기청정기 작동
+            airCleaner(room, 0);
+            airCleaner(room, 1);
+            t -= 1;
         }
 
-        // parents와 size배열은 기록된 groupId 크기만큼 기록
-        parents = new int[groupId];
-        size = new int[groupId];
-        for(int i = 1; i < groupId; i++){
-            parents[i] = i;
-            size[i] = 1;
-        }
-        // 다리 최소 값 구하기
-        Collections.sort(bridges, (a,b) -> Integer.compare(a.cost, b.cost));
         int answer = 0;
-        int islands = groupId - 2;
-        for(Bridge bridge : bridges){
-            int start = bridge.start;
-            int end = bridge.end;
-            int cost = bridge.cost;
-
-            if(find(start) != find(end)){
-                union(start, end);
-                answer += cost;
-                islands -= 1;
+        for(int i = 0; i < R; i++){
+            for(int j = 0; j < C; j++){
+                if(room[i][j] > 0){
+                    answer += room[i][j];
+                }
             }
         }
-        // 섬이 전부 연결되어있는지 확인
-        if(islands > 1) return -1;
 
         return answer;
     }
 
-    private void makeGroup(int[][] map, int x, int y, int groupId){
-        q.add(new int[]{x,y});
-        map[x][y] = groupId;
+    private void airCleaner(int[][] room, int pos){
+        int dir = 1;
+        // 청정기 위쪽
+        if(pos == 0){
+            int temp1 = 0;
+            int x = airX1;
+            int y = 1;
 
-        while(!q.isEmpty()){
-            int[] curr = q.poll();
-            int currX = curr[0];
-            int currY = curr[1];
-
-            for(int i = 0; i < 4; i++){
-                int nx = currX + dxs[i];
-                int ny = currY + dys[i];
-                if(inRange(nx,ny) && map[nx][ny] != 0){
-                    if(map[nx][ny] != groupId){
-                        map[nx][ny] = groupId;
-                        q.add(new int[]{nx,ny});
-                    }
+            while(true){
+                if(x == airX1 && y == 0){
+                    break;
                 }
+                int temp2 = room[x][y];
+                room[x][y] = temp1;
+                temp1 = temp2;
+
+                int nx = x + dxs[dir];
+                int ny = y + dys[dir];
+                if(!inRange(nx,ny)){
+                    dir = (dir + 1) % 4;
+                    nx = x + dxs[dir];
+                    ny = y + dys[dir];
+                }
+                x = nx;
+                y = ny;
             }
         }
-    }
+        // 청정기 아래쪽
+        if(pos == 1){
+            int temp1 = 0;
+            int x = airX2;
+            int y = 1;
 
-    private void getBridge(int[][] map,int x, int y, int dir, int groupId){
-        int cnt = 1;
-        int start  = groupId;
-        int end = 0;
-        boolean reached = false;
-        // 주어진 방향으로 다른 섬이 나올때까지 전진
-        while(true){
-            if(!inRange(x,y)){
-                break;
-            }
-            if(map[x][y] == groupId) break;
-            if(map[x][y] != 0){
-                end = map[x][y];
-                cnt -= 1;
-                reached = true;
-                break;
-            }
-            x += dxs[dir];
-            y += dys[dir];
-            cnt += 1;
-        }
+            while(true){
+                if(x == airX2 && y == 0){
+                    break;
+                }
+                int temp2 = room[x][y];
+                room[x][y] = temp1;
+                temp1 = temp2;
 
-        if(cnt >= 2 && reached){
-            // 섬의 groupId에서 -1해서 기록
-            bridges.add(new Bridge(start - 1, end - 1, cnt));
+                int nx = x + dxs[dir];
+                int ny = y + dys[dir];
+                if(!inRange(nx,ny)){
+                    dir = (dir + 3) % 4;
+                    nx = x + dxs[dir];
+                    ny = y + dys[dir];
+                }
+                x = nx;
+                y = ny;
+            }
         }
     }
 
     private boolean inRange(int nx, int ny){
-        return nx >= 0 && nx < N && ny >= 0 && ny < M;
-    }
-
-    private int find(int curr){
-        if(parents[curr] == curr) return curr;
-        return parents[curr] = find(parents[curr]);
-    }
-
-    private void union(int curr1, int curr2){
-        int root1 = find(curr1);
-        int root2 = find(curr2);
-
-        if(root1 == root2) return;
-
-        if(size[root1] < size[root2]){
-            int temp = root1;
-            root1 = root2;
-            root2 = temp;
-        }
-
-        parents[root2] = root1;
-        size[root1] += size[root2];
+        return nx >= 0 && nx < R && ny >= 0 && ny < C;
     }
 }
