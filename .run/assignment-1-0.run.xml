@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="과제 1 - 전체 예제 채점" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="ExampleCheck" />
+    <module name="assignment-01" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/assignments/01-bus" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

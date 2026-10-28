@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="과제 1 - 예제 2 실행 및 디버깅" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="Main" />
+    <module name="assignment-01" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/assignments/01-bus" />
+    <option name="REDIRECT_INPUT" value="true" />
+    <option name="INPUT_FILE" value="$PROJECT_DIR$/assignments/01-bus/examples/input2.txt" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

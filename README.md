@@ -1,64 +1,36 @@
 # 코딩 테스트 연습장
 
-백준 문제도 프로그래머스처럼 `solution` 함수만 구현하며 연습하기 위한 Java 템플릿입니다.
+백준은 `src/Main.java` 한 파일에서 표준 입력과 표준 출력을 직접 작성하며 연습합니다.
+초기 코드는 `import java.io.IOException;`, `import java.util.*;`, `Main` 클래스와 빈 `main` 메서드(`throws IOException` 포함)만 제공합니다.
 
-## 사용 방법
+## 현재 문제
 
-1. `src/Solution.java`의 `solution` 함수를 구현합니다.
-2. `src/Main.java`를 실행합니다.
-3. 프로그램이 `input.txt`를 읽어 실행한 뒤, 결과를 `output.txt`와 비교합니다.
+- [백준 2206번 벽 부수고 이동하기](https://www.acmicpc.net/problem/2206)
+- 상태: 온라인 정답 (2026-10-28 사용자 확인)
+- 난이도: 골드 III (외부 게시글 표기 교차 확인에 따른 추정, 2026-10-26 확인)
+- 난이도 출처: [swanzzz 블로그](https://swanzzz.tistory.com/25), [코딩 기록일지](https://akys159357.tistory.com/388)
+- 과거 [게시글](https://my-coding-notes.tistory.com/169)은 골드 IV로 표기되어 있어 차이가 있습니다. 더 최근 게시글의 골드 III 표기를 참고했습니다.
+- 공식 페이지 접근 불가로 [입출력·공식 예제 재게시 자료](https://idkim97.github.io/2022-05-10-%EB%B0%B1%EC%A4%80_2206%EB%B2%88/)를 확인했습니다.
+- `input.txt`, `output.txt`: 공식 예제 1
+- `examples/baekjoon/2206/`: 공식 예제 1~2
+- 이전 10026번 적록색약의 온라인 정답 기록과 제출 파일은 사용자 코드 그대로 보존했습니다.
 
-현재는 **백준 17144번 미세먼지 안녕!** 문제로 세팅되어 있습니다.
-
-- 문제: https://www.acmicpc.net/problem/17144
-- 현재 난이도: 확인 불가 (`solved.ac` 페이지·API 접근 실패, 2026-09-21 확인 시도)
-- 원문 직접 조회가 불가능하여 [원문 입출력·예제 재게시 자료](https://yywn.tistory.com/161)로 확인했습니다.
-- 입력 범위: 6 ≤ R, C ≤ 50, 1 ≤ T ≤ 1,000, -1 ≤ 각 칸의 값 ≤ 1,000.
-
-```java
-public int solution(int r, int c, int t, int[][] room) {
-    return 0;
-}
-```
-
-`r`, `c`, `t`는 입력의 R, C, T 그대로입니다. `room`에는 입력 행·열 순서와 값을 그대로 담습니다.
-공기청정기를 나타내는 -1도 그대로 전달합니다. 배열 인덱스는 0-based이며,
-`room[0][0]`은 문제의 1행 1열에 해당합니다. 반환값은 T초 후 남은 미세먼지 총량입니다.
-
-`input.txt`와 `output.txt`에는 공식 예제 1을 저장했습니다.
-공식 예제 1~8은 `examples/baekjoon/17144/`에도 보관되어 있습니다.
-`Main` 실행 시 기본 예제와 나머지 예제 2~8을 모두 비교합니다.
-현재 풀이 함수는 기본값 0만 반환하므로 예제 오답은 정상입니다.
-
-## 파일 역할
-
-- `src/Solution.java`: 직접 문제를 푸는 파일
-- `src/Main.java`: 입력 변환 및 결과 채점기
-- `input.txt`: 문제의 예제 입력
-- `output.txt`: 문제의 예제 출력
-- `problem-records/`: 정답 문제의 해설, 코드, 오답 원인 및 복습 기록
-
-앞으로 문제를 바꿀 때는 문제의 입력 형식에 맞게 `Main.runSolution()`과
-`Solution.solution(...)`, `input.txt`, `output.txt`를 함께 갱신합니다.
-
-온라인 채점에서 정답을 받은 뒤에는 `problem-records`에 문제별 복습 기록을
-남깁니다. 기록 형식은 `problem-records/TEMPLATE.md`에서 확인할 수 있습니다.
-
-풀이를 작성한 뒤 `채점해줘`라고 요청하면 공식 예제뿐 아니라 추가·경계 테스트로
-검증합니다. 이때는 입력값, 기댓값, 실제값과 통과 여부만 알려주며, 사용자가 직접
-도움을 요청하기 전에는 풀이법이나 힌트를 제공하지 않습니다.
-
-확장 채점의 모든 테스트를 통과하면 문제 기록을 자동으로 생성합니다. 온라인 제출
-전이라면 `로컬 확장 채점 통과`, 실제 제출 정답이 확인되면 `온라인 정답`으로 구분해
-표시합니다.
-
-동시에 `submissions/<플랫폼>/<문제번호>/`에 플랫폼 제출용 파일도 자동 생성합니다.
-백준 Java 문제는 독립 실행 가능한 단일 `Main.java`로 만들고, 디버그 출력과 연습용
-파일 의존성을 제거한 뒤 별도로 컴파일하고 다시 검증합니다.
-
-## 터미널에서 실행
+## 실행
 
 ```bash
-javac -d out src/Main.java src/Solution.java
-java -cp out Main
+javac -d out src/Main.java
+java -cp out Main < input.txt
 ```
+
+IDE에서는 `Main`을 실행하고 콘솔에 입력을 붙여 넣어도 됩니다.
+초기 템플릿의 `main`은 비어 있으며, 입력과 출력은 직접 작성합니다.
+
+## 채점과 기록
+
+`채점해줘`라고 요청하면 사용자 코드를 수정하지 않고 공식 예제와 추가·경계·무작위·성능 테스트로 검증합니다.
+확장 채점이 모두 통과하면 문제 기록과 `submissions/baekjoon/<문제번호>/Main.java`를 생성합니다.
+온라인 정답이 확인되기 전에는 `로컬 확장 채점 통과`로 기록합니다.
+기록에는 사용자가 작성한 `src/Main.java` 전체를 그대로 보존합니다.
+
+기존 풀이 기록은 `problem-records/`, 제출 파일은 `submissions/`에 있습니다.
+별도 과제의 실행 방법은 [assignments 안내](assignments/README.md)를 참고하세요.

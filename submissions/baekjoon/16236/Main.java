@@ -2,126 +2,111 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(reader.readLine().trim());
         int[][] space = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < n; j++) space[i][j] = Integer.parseInt(st.nextToken());
+        for (int row = 0; row < n; row++) {
+            StringTokenizer tokens = new StringTokenizer(reader.readLine());
+            for (int column = 0; column < n; column++) {
+                space[row][column] = Integer.parseInt(tokens.nextToken());
+            }
         }
-        System.out.print(new Solution().solution(n, space));
+        System.out.println(new Solution().solution(n, space));
     }
 }
 
 class Solution {
-    int N;
-    int[] dxs = {1,0,-1,0};
-    int[] dys = {0,1,0,-1};
-    int size = 2;
+    /**
+     * @param n 공간의 크기 N (입력값 그대로)
+     * @param space N×N 공간, 입력 행·열 순서와 값 그대로.
+     *              0은 빈칸, 1~6은 물고기 크기, 9는 아기 상어의 위치.
+     *              배열 인덱스는 0-based이며 space[0][0]은 첫 행 첫 열.
+     * @return 아기 상어가 물고기를 잡아먹을 수 있는 총 시간
+     */
     class Node{
         int x;
         int y;
-        int sx;
-        int sy;
         int dis;
-        public Node(int x, int y,int sx, int sy, int dis){
+        public Node(int x, int y, int dis){
             this.x = x;
-            this.y = y;
-            this.sx = sx;
-            this.sy = sy;
-            this.dis = dis;
+            this.y= y;
+            this.dis =dis;
         }
     }
-    // 먹을 수 있는 물고기 후보군 (거리 -> x -> y 오름차순)
-    PriorityQueue<Node> pq = new PriorityQueue<>((a,b) -> {
-        if(a.dis != b.dis) return Integer.compare(a.dis, b.dis);
-        if(a.x != b.x) return Integer.compare(a.x, b.x);
-        return Integer.compare(a.y, b.y);
-    });
-    int answer = 0;
+    int[] dxs = {1,0,-1,0};
+    int[] dys = {0,1,0,-1};
+    int size = 2;
+    int x;
+    int y;
     public int solution(int n, int[][] space) {
-
-        // 기본적인 상어 움직임은 상하좌우 1
-        // 먹을 수 잇는 물고기 모음 pq를 이용해서 Node(x,y,dis)로 dis - x-y 각각 오름차순으로 조건
-        // 무한루프를 하지만 pq가 빌때까지
-        // 상어의 크기를 지속적으로 기록하고 크기가 바뀔때마다 pq 최신화 (조건의 크기가 작기 때문에 완탐가능)
-        // 최초에 상어 크기 2인상태로 물고기를 넣어본다.
-        // 정답인 cnt는 지속적으로 체크
-        // while 마다 다음 목표로 이동 move메서드는 목표 x,y값을 파라미터로 상어가 이동해보고 boolean을 반환하여 갈 수 있는 지 없는지를 판단
-        // 만약 여기서 false가 나오면 못먹는 물고기
-        N = n;
-
-        int startX = 0;
-        int startY = 0;
-        // 최초 물고기 위치 확인 및 먹을 수 있는 생선 등록
-        for(int i = 0; i < N; i++){
-            for(int j = 0; j < N; j++){
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
                 if(space[i][j] == 9){
-                    startX = i;
-                    startY = j;
-                    getFish(startX, startY,space);
+                    x = i;
+                    y = j;
                 }
             }
         }
-
         int cnt = 0;
-        // 본격적 진행
-        while(!pq.isEmpty()){
-            // 먹을 물고기
-            Node curr = pq.poll();
+        int answer = 0;
+        while(true){
+            PriorityQueue<Node> pq = new PriorityQueue<>((a,b) -> {
+                if(a.dis != b.dis) return a.dis - b.dis;
+                else if(a.x != b.x) return a.x - b.x;
+                else return a.y - b.y;
+            });
 
-            // 이미 먹은 위치/ 시작점이 다른 지점은 스킵
-            if(space[curr.x][curr.y] == 0 || !(curr.sx == startX && curr.sy == startY)) continue;
+            move(pq, space);
+
+            if(pq.isEmpty()) break;
+            Node next = pq.poll();
+            space[x][y] = 0;
+            x = next.x;
+            y = next.y;
+            answer += next.dis;
+            space[x][y] = 9;
             cnt += 1;
-            space[startX][startY] = 0;
-            startY = curr.y;
-            startX = curr.x;
-            answer += curr.dis;
-            if(cnt == size){
-                size += 1;
+            if(cnt == size) {
                 cnt = 0;
+                size += 1;
             }
-            // 현재 위치에서 다시 먹을 물고기 후보 먹기
-            getFish(startX, startY,space);
-
         }
-
         return answer;
     }
-    private void getFish(int x, int y, int[][] space){
-        Queue<int[]> q = new LinkedList<>();
-        boolean[][] visited = new boolean[N][N];
-        int[][] disInfo = new int[N][N];
+
+    private void move(PriorityQueue<Node> pq, int[][] space){
+        boolean[][] visited = new boolean[space.length][space.length];
+        Queue<Node> q = new LinkedList<>();
+        int best = Integer.MAX_VALUE;
+        q.add(new Node(x,y,0));
         visited[x][y] = true;
-        q.add(new int[]{x,y});
 
         while(!q.isEmpty()){
-            int[] curr = q.poll();
-            int currX = curr[0];
-            int currY = curr[1];
-            int dis = disInfo[currX][currY];
-            if(space[currX][currY] != 0 && space[currX][currY] < size && dis > 0){
-                pq.add(new Node(currX, currY, x, y, dis));
+            Node curr = q.poll();
+            int currX = curr.x;
+            int currY = curr.y;
+            int dis = curr.dis;
+            int fishSize = space[currX][currY];
+            if(best < dis) break;
+            if(fishSize != 0 && fishSize != 9 && fishSize < size){
+                pq.add(new Node(currX, currY, dis));
+                best = dis;
             }
 
             for(int i = 0; i < 4; i++){
                 int nx = currX + dxs[i];
                 int ny = currY + dys[i];
-                if(inRange(nx,ny) && !visited[nx][ny] && space[nx][ny] <= size){
-                    q.add(new int[]{nx,ny});
-                    disInfo[nx][ny] = dis + 1;
+                if(inRange(nx,ny,space.length) && !visited[nx][ny] && space[nx][ny] <= size){
+
+                    q.add(new Node(nx,ny,dis + 1));
                     visited[nx][ny] = true;
                 }
             }
         }
     }
 
-    private int calDis(int x1, int y1, int x2, int y2){
-        return Math.abs(x1 - x2) + Math.abs(y1 - y2);
-    }
-
-    private boolean inRange(int nx, int ny){
-        return nx >= 0 && nx < N && ny >= 0 && ny < N;
+    private boolean inRange(int nx, int ny, int n){
+        return nx >= 0 && nx < n && ny >= 0 && ny < n;
     }
 }
