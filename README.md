@@ -5,15 +5,14 @@
 
 ## 현재 문제
 
-- [백준 2206번 벽 부수고 이동하기](https://www.acmicpc.net/problem/2206)
-- 상태: 온라인 정답 (2026-10-28 사용자 확인)
-- 난이도: 골드 III (외부 게시글 표기 교차 확인에 따른 추정, 2026-10-26 확인)
-- 난이도 출처: [swanzzz 블로그](https://swanzzz.tistory.com/25), [코딩 기록일지](https://akys159357.tistory.com/388)
-- 과거 [게시글](https://my-coding-notes.tistory.com/169)은 골드 IV로 표기되어 있어 차이가 있습니다. 더 최근 게시글의 골드 III 표기를 참고했습니다.
-- 공식 페이지 접근 불가로 [입출력·공식 예제 재게시 자료](https://idkim97.github.io/2022-05-10-%EB%B0%B1%EC%A4%80_2206%EB%B2%88/)를 확인했습니다.
+- [백준 1504번 특정한 최단 경로](https://www.acmicpc.net/problem/1504)
+- 상태: 온라인 정답 (2026-11-10 사용자 확인)
+- 난이도: 골드 IV (외부 게시글 표기 교차 확인에 따른 추정, 2026-11-10 확인)
+- 난이도 출처: [pwd 블로그](https://tech-jhpark.tistory.com/17), [테페리넷](https://www.teferi.net/ps/problems/boj/1504)
+- 공식 페이지 접근 불가로 [입출력·공식 예제 재게시 자료](https://ps.dabyeol.com/solutions/boj/1504)를 확인했습니다.
 - `input.txt`, `output.txt`: 공식 예제 1
-- `examples/baekjoon/2206/`: 공식 예제 1~2
-- 이전 10026번 적록색약의 온라인 정답 기록과 제출 파일은 사용자 코드 그대로 보존했습니다.
+- `examples/baekjoon/1504/`: 공식 예제 1 보관
+- 이전 2206번 벽 부수고 이동하기의 온라인 정답 기록과 제출 파일은 사용자 코드 그대로 보존했습니다.
 
 ## 실행
 
