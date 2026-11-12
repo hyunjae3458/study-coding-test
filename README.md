@@ -5,14 +5,14 @@
 
 ## 현재 문제
 
-- [백준 1504번 특정한 최단 경로](https://www.acmicpc.net/problem/1504)
-- 상태: 온라인 정답 (2026-11-10 사용자 확인)
-- 난이도: 골드 IV (외부 게시글 표기 교차 확인에 따른 추정, 2026-11-10 확인)
-- 난이도 출처: [pwd 블로그](https://tech-jhpark.tistory.com/17), [테페리넷](https://www.teferi.net/ps/problems/boj/1504)
-- 공식 페이지 접근 불가로 [입출력·공식 예제 재게시 자료](https://ps.dabyeol.com/solutions/boj/1504)를 확인했습니다.
-- `input.txt`, `output.txt`: 공식 예제 1
-- `examples/baekjoon/1504/`: 공식 예제 1 보관
-- 이전 2206번 벽 부수고 이동하기의 온라인 정답 기록과 제출 파일은 사용자 코드 그대로 보존했습니다.
+- [백준 1005번 ACM Craft](https://www.acmicpc.net/problem/1005)
+- 상태: 로컬 확장 채점 통과 (2026-11-12, 온라인 정답 미확인)
+- 난이도: 골드 III (외부 게시글 표기 교차 확인에 따른 추정, 2026-11-12 확인)
+- 난이도 출처: [system32 블로그](https://blog.system32.kr/501), [dev-ho 블로그](https://dev-ho.tistory.com/16)
+- 공식 페이지 접근 불가로 [입출력·공식 예제 재게시 자료](https://konghana01.tistory.com/327)를 확인했습니다.
+- `input.txt`, `output.txt`: 공식 예제 1 (테스트 케이스 2개)
+- `examples/baekjoon/1005/`: 공식 예제 1~2 (테스트 케이스 총 7개) 보관
+- 이전 16234번 인구 이동의 최신 사용자 코드를 재검증하여 기록과 제출 파일에 보존했습니다. 상태는 로컬 확장 채점 통과입니다.
 
 ## 실행
 
