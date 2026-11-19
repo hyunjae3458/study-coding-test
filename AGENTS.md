@@ -1,3 +1,12 @@
+## SWEA 세팅 방식 변경 (2026-11-17 사용자 요청, 기존 SWEA 규칙보다 우선)
+
+- SWEA는 사이트 제출 형식대로 `src/Solution.java`의 `class Solution`과 `main`에서 표준 입출력으로 연습한다.
+- 기본 템플릿은 BufferedReader 생성, 테스트 케이스 수 T 입력, 빈 testCase 반복문을 제공하며 StringTokenizer를 import한다. 사용자의 입력 방식 선호를 따른다.
+- 문제별 입력 파싱, 풀이 로직, 결과 출력은 사용자가 직접 작성한다. solution 함수 및 Main 채점 어댑터는 만들지 않는다.
+- 실행: `javac -d out src/Solution.java`, `java -cp out Solution < input.txt`.
+- 채점 시 src/Solution.java를 보호하고, 기록과 SWEA 제출 파일에는 사용자 코드 전체를 원형 그대로 보존한다.
+- 공식 예제 보관 및 확장 채점·자동 기록 원칙은 유지한다.
+
 # 코딩 테스트 연습 프로젝트 지침
 
 ## 백준 문제 세팅 방식 변경 (2026-10-23 사용자 요청, 아래 기존 규칙보다 우선)
